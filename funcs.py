@@ -124,30 +124,22 @@ def readFlowData(path):
             while len(line)==0 or line[0]=='~':
                 line = f.readline().strip()
 
-            thisZoneNum = int(line.split()[-1])
-            print(thisZoneNum)
+            if line.startswith('Origin'):
+                thisZoneNum = int(line.split()[-1])
 
             line = f.readline().strip().strip(';')
 
-            while len(line) != 0:
-                print(line)
-
-                if line[0].startswith('Origin'):
-                    break
+            while len(line) != 0 and not line.startswith('Origin'):
 
                 tempLine = line.strip().split(';')
-                print(tempLine)
                 for keyVals in tempLine:
                     keyVals = keyVals.split(':')
                     keyVals = [int(keyVals[0]), float(keyVals[1])]
-                    print(keyVals)
                     toZone = keyVals[0]
                     demand = keyVals[1]
                     odMat[thisZoneNum-1][toZone-1] = demand
                 line = f.readline().strip().strip(';')
 
-    print(odMat)
-    print(flow)
     return odMat
 
 
@@ -483,9 +475,9 @@ if __name__ == "__main__":
     print(pathDict)
     print(pathArcDict)
     data1 = msa(nodes, arcs, odMat, numNodes, numLinks)
-    #data2 = frankWolfe(nodes, arcs, odMat, numNodes, numLinks)
+    data2 = frankWolfe(nodes, arcs, odMat, numNodes, numLinks)
 
-    #plt.plot(data1[10:, 0], data1[10:, 1], label="msa")
-    #plt.plot(data2[10:, 0], data2[10:, 1], label="fw")
-    #plt.legend()
-    #plt.savefig("fw.png")
+    plt.plot(data1[10:, 0], data1[10:, 1], label="msa")
+    plt.plot(data2[10:, 0], data2[10:, 1], label="fw")
+    plt.legend()
+    plt.savefig("combined.png")
