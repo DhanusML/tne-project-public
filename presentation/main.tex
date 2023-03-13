@@ -154,7 +154,7 @@ zero flow.
 \end{frame}
 
 
-\begin{frame}{Algorithm -- Single Step Path Flow Update}
+\begin{frame}{Algorithm -- Single O-D Pair}
 Takes some initial path flow vector $\{g_h: h\in H_{rs}\}$
 as input and outputs updated path flow vector.
 The steps involved are:
@@ -178,11 +178,50 @@ The steps involved are:
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}{Algorithm -- Single O-D Pair}
+\begin{columns}
+    \begin{column}{0.4\textwidth}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg11.jpg}
+    \end{figure}
+    \end{column}
+
+    \begin{column}{0.2\textwidth}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg12.jpg}
+    \end{figure}
+    \end{column}
+
+    \begin{column}{0.4\textwidth}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg13.jpg}
+    \end{figure}
+    \end{column}
+\end{columns}
 \end{frame}
 
 
-\begin{frame}{Greedy Path Based Algorithm}
+\begin{frame}{Initialization}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg11.jpg}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Main Loop}
+    \begin{figure}
+    \includegraphics[scale=0.5]{./alg12.jpg}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Flow Update}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg13.jpg}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Greedy Path-Based Algorithm}
 The steps involved are:
 \begin{enumerate}
 \setcounter{enumi}{-1}
@@ -210,8 +249,50 @@ The steps involved are:
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}{Greedy Path-Based Algorithm}
+\begin{columns}
+    \begin{column}{0.33\textwidth}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg21.jpg}
+    \end{figure}
+    \end{column}
+
+    \begin{column}{0.33\textwidth}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg22.jpg}
+    \end{figure}
+    \end{column}
+
+    \begin{column}{0.33\textwidth}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg23.jpg}
+    \end{figure}
+    \end{column}
+\end{columns}
 \end{frame}
+
+
+\begin{frame}{Initialization}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg21.jpg}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Main Loop}
+    \begin{figure}
+    \includegraphics[width=\textwidth]{./alg22.jpg}
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Inner Loop}
+    \begin{figure}
+    \includegraphics[scale=0.5]{./alg23.jpg}
+    \end{figure}
+\end{frame}
+
+
 
 \begin{frame}{Results}
 \begin{itemize}
@@ -250,5 +331,9 @@ performs better than GP.
 The path-based algorithms generates less than $2$ million
 used paths, which consumes less than $600$ megabytes of
 memory.
+\end{frame}
+
+
+\begin{frame}{Conclusion}
 \end{frame}
 \end{document}
