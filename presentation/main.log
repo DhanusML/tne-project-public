@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.12)  13 MAR 2023 01:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.12)  13 MAR 2023 12:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -900,7 +900,43 @@ thkerncmss.
 
 ] [9
 
+] [10
+
+] [11
+
+] [12
+
+] [13
+
 ]
+<./graph1.jpg, id=357, 769.87625pt x 620.3175pt>
+File: ./graph1.jpg Graphic file (type jpg)
+<use ./graph1.jpg>
+Package pdftex.def Info: ./graph1.jpg  used on input line 233.
+(pdftex.def)             Requested size: 269.46072pt x 217.11438pt.
+
+Overfull \vbox (4.70526pt too high) detected at line 233
+ []
+
+[14
+
+ <./graph1.jpg>]
+<./graph2.jpg, id=383, 769.87625pt x 316.18124pt>
+File: ./graph2.jpg Graphic file (type jpg)
+<use ./graph2.jpg>
+Package pdftex.def Info: ./graph2.jpg  used on input line 242.
+(pdftex.def)             Requested size: 307.28987pt x 126.2049pt.
+ [15
+
+ <./graph2.jpg>]
+<./table1.jpg, id=408, 775.89874pt x 161.60374pt>
+File: ./table1.jpg Graphic file (type jpg)
+<use ./table1.jpg>
+Package pdftex.def Info: ./table1.jpg  used on input line 253.
+(pdftex.def)             Requested size: 307.28987pt x 64.00168pt.
+ [16
+
+ <./table1.jpg>]
 \tf@nav=\write6
 \openout6 = `main.nav'.
 
@@ -915,11 +951,11 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 21807 strings out of 478238
- 425120 string characters out of 5850456
- 682210 words of memory out of 5000000
- 39562 multiletter control sequences out of 15000+600000
- 476009 words of font info for 52 fonts, out of 8000000 for 9000
+ 21900 strings out of 478238
+ 426768 string characters out of 5850456
+ 682067 words of memory out of 5000000
+ 39635 multiletter control sequences out of 15000+600000
+ 479803 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  128i,19n,122p,428b,562s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
@@ -930,11 +966,12 @@ mss12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr
 /share/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></usr/share/texmf-
 dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/share/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmsy8.pfb>
-Output written on main.pdf (9 pages, 118538 bytes).
+onts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.p
+fb>
+Output written on main.pdf (16 pages, 267625 bytes).
 PDF statistics:
- 301 PDF objects out of 1000 (max. 8388607)
- 261 compressed objects within 3 object streams
- 19 named destinations out of 1000 (max. 500000)
- 43 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 489 PDF objects out of 1000 (max. 8388607)
+ 435 compressed objects within 5 object streams
+ 33 named destinations out of 1000 (max. 500000)
+ 58 words of extra memory for PDF output out of 10000 (max. 10000000)
 

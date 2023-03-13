@@ -2,8 +2,8 @@
 \usetheme{Rochester}
 
 \input{/home/dhanus/Documents/latex-headers/header_presentation.tex}
-\title{UE-TAP}
-\author{Xie}
+\title{A Greedy Path-Based Algorithm for Traffic Assignment}
+\author{Jun Xie, Yu Nie, Xiaobo Liu}
 \date{\today}
 
 \begin{document}
@@ -82,7 +82,7 @@ Subject to:
     \]
 
     \item Denote $\frac{\partial z_{rs}}{\partial f_h}\big|_{g}=: v_h^g$ and
-    $\frac{\partial ^2 z_{rs}}{\partial f_h^2}\big|_g(f_h-g_h)^2 =: s_h^g$.
+    $\frac{\partial ^2 z_{rs}}{\partial f_h^2}\big|_g =: s_h^g$.
 
     \item After removing constants, objective becomes:
     \[
@@ -128,7 +128,7 @@ Put
 \[
 c_h^g := v_h^g - s_h^g g_h
 \]
-then the conditions seen in last slide for used paths
+then the conditions seen in previous slide for used paths
 ($\hat{H}_{rs}$) become
 \[
     c_h^g + s_h^g f_h = w_{rs} := \bar{w}_{rs} \quad \forall h\in\hat{H}_{rs}
@@ -163,8 +163,92 @@ The steps involved are:
     $c_h^g$.
 
     \item Sort paths based on increasing $c_h^g$.
+
+    \item Add the path with smallest $c_h^g$ to $\hat{H}_{rs}$
+    and update $\bar{w}_{rs}$.
+
+    \item Keep adding subsequent paths until $c_h^g$ exceeds
+    $\bar{w}_{rs}$.
+
+    \item Update the flows.
+
+    \item The new path flow vector $\hat{H}_{rs}$ is given as
+    output.
 \end{enumerate}
 \end{frame}
+
+
+\begin{frame}
+\end{frame}
+
+
+\begin{frame}{Greedy Path Based Algorithm}
+The steps involved are:
+\begin{enumerate}
+\setcounter{enumi}{-1}
+    \item Initialization: assign all passengers to shortest
+    path between O-D pairs and set $H_{rs}$ to contain
+    the shortest path between $r$ and $s$.
+
+    \item Perform flow adjustment on $H_{rs}$ using the
+    previous algorithm for each $r,s$.
+
+    \item (Inner loop) Update flows on O-D pairs with larger deviation:
+    \begin{itemize}
+    \item If $\max{v_h} - \min{v_h}\geq RG^{k-1}/2$,
+    for an O-D pair, $H_{rs}$ is passed to the previous
+    algorithm again.
+
+    \item If this update is not being done for any
+    O-D pair (or if the iteration exceeds a limit),
+    break from the loop.
+    \end{itemize}
+
+    \item Push the shortest path between each O-D pairs to
+    $H_{rs}$ and repeat from step 1 until convergence.
+\end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+\end{frame}
+
+\begin{frame}{Results}
+\begin{itemize}
+    \item Numerical results were produced on Windows 10
+    workstation with $3.3GHz$ Intel Xenon processor and
+    $16 GB$ RAM using C++.
+
+    \item The greedy algorithm performs better than GP, TAPAS,
+    iTAPAS in all the experiments.
+
+    \item iGP performs almost as good as the greedy method.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Results}
+\begin{figure}
+\includegraphics[scale=0.35]{./graph1.jpg}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Results}
+Even without the inner loop, the greedy algorithm
+performs better than GP.
+\begin{figure}
+\includegraphics[width=\textwidth]{./graph2.jpg}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}{Results -- Memory Usage}
+\begin{figure}
+\includegraphics[width=\textwidth]{./table1.jpg}
+\end{figure}
+
+The path-based algorithms generates less than $2$ million
+used paths, which consumes less than $600$ megabytes of
+memory.
+\end{frame}
 \end{document}
-
-
