@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.12)  13 MAR 2023 13:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.12)  13 MAR 2023 13:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -867,159 +867,165 @@ Dictionary: translator-theorem-dictionary, Language: English
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 [2
 
+] [3
+
+] [4
+
+] [5
+
 ]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 37.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 75.
 
  (/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 37.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 75.
 
 
 (/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for OT1+mathkerncmss on inp
-ut line 37.
+ut line 75.
 
 (/usr/share/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
 File: ot1mathkerncmss.fd 2020/01/31 Fontinst v1.933 font definitions for OT1/ma
 thkerncmss.
-) [3
+) [6
 
 ]
-[4
-
-] [5
-
-] [6
-
-] [7
+[7
 
 ] [8
 
 ] [9
 
+] [10
+
+] [11
+
+] [12
+
 ]
-<./alg11.jpg, id=254, 546.04pt x 263.98625pt>
+<./alg11.jpg, id=329, 546.04pt x 263.98625pt>
 File: ./alg11.jpg Graphic file (type jpg)
 <use ./alg11.jpg>
-Package pdftex.def Info: ./alg11.jpg  used on input line 201.
+Package pdftex.def Info: ./alg11.jpg  used on input line 239.
 (pdftex.def)             Requested size: 122.91406pt x 59.42253pt.
-<./alg12.jpg, id=255, 311.1625pt x 188.705pt>
+<./alg12.jpg, id=330, 311.1625pt x 188.705pt>
 File: ./alg12.jpg Graphic file (type jpg)
 <use ./alg12.jpg>
-Package pdftex.def Info: ./alg12.jpg  used on input line 201.
+Package pdftex.def Info: ./alg12.jpg  used on input line 239.
 (pdftex.def)             Requested size: 61.45703pt x 37.2681pt.
-<./alg13.jpg, id=256, 526.96875pt x 382.42876pt>
+<./alg13.jpg, id=331, 526.96875pt x 382.42876pt>
 File: ./alg13.jpg Graphic file (type jpg)
 <use ./alg13.jpg>
-Package pdftex.def Info: ./alg13.jpg  used on input line 201.
+Package pdftex.def Info: ./alg13.jpg  used on input line 239.
 (pdftex.def)             Requested size: 122.91406pt x 89.19969pt.
- [10
+ [13
 
  <./alg11.jpg> <./alg12.jpg> <./alg13.jpg>]
 File: ./alg11.jpg Graphic file (type jpg)
 <use ./alg11.jpg>
-Package pdftex.def Info: ./alg11.jpg  used on input line 208.
+Package pdftex.def Info: ./alg11.jpg  used on input line 246.
 (pdftex.def)             Requested size: 307.28987pt x 148.56036pt.
- [11
+
+[14
 
 ]
 File: ./alg12.jpg Graphic file (type jpg)
 <use ./alg12.jpg>
-Package pdftex.def Info: ./alg12.jpg  used on input line 215.
+Package pdftex.def Info: ./alg12.jpg  used on input line 253.
 (pdftex.def)             Requested size: 155.58087pt x 94.35226pt.
-
-[12
+ [15
 
 ]
 File: ./alg13.jpg Graphic file (type jpg)
 <use ./alg13.jpg>
-Package pdftex.def Info: ./alg13.jpg  used on input line 222.
+Package pdftex.def Info: ./alg13.jpg  used on input line 260.
 (pdftex.def)             Requested size: 307.28987pt x 223.01675pt.
 
-Overfull \vbox (10.60764pt too high) detected at line 222
+Overfull \vbox (10.60764pt too high) detected at line 260
  []
 
-[13
+[16
 
-] [14
+] [17
 
 ]
-<./alg21.jpg, id=385, 545.03625pt x 230.8625pt>
+<./alg21.jpg, id=461, 545.03625pt x 230.8625pt>
 File: ./alg21.jpg Graphic file (type jpg)
 <use ./alg21.jpg>
-Package pdftex.def Info: ./alg21.jpg  used on input line 272.
+Package pdftex.def Info: ./alg21.jpg  used on input line 310.
 (pdftex.def)             Requested size: 101.40622pt x 42.95195pt.
-<./alg22.jpg, id=386, 530.98375pt x 231.86626pt>
+<./alg22.jpg, id=462, 530.98375pt x 231.86626pt>
 File: ./alg22.jpg Graphic file (type jpg)
 <use ./alg22.jpg>
-Package pdftex.def Info: ./alg22.jpg  used on input line 272.
+Package pdftex.def Info: ./alg22.jpg  used on input line 310.
 (pdftex.def)             Requested size: 101.40622pt x 44.28146pt.
-<./alg23.jpg, id=387, 528.97626pt x 439.6425pt>
+<./alg23.jpg, id=463, 528.97626pt x 439.6425pt>
 File: ./alg23.jpg Graphic file (type jpg)
 <use ./alg23.jpg>
-Package pdftex.def Info: ./alg23.jpg  used on input line 272.
+Package pdftex.def Info: ./alg23.jpg  used on input line 310.
 (pdftex.def)             Requested size: 101.40622pt x 84.27757pt.
- [15
+ [18
 
  <./alg21.jpg> <./alg22.jpg> <./alg23.jpg>]
 File: ./alg21.jpg Graphic file (type jpg)
 <use ./alg21.jpg>
-Package pdftex.def Info: ./alg21.jpg  used on input line 279.
+Package pdftex.def Info: ./alg21.jpg  used on input line 317.
 (pdftex.def)             Requested size: 307.28987pt x 130.15926pt.
- [16
+ [19
 
 ]
 File: ./alg22.jpg Graphic file (type jpg)
 <use ./alg22.jpg>
-Package pdftex.def Info: ./alg22.jpg  used on input line 286.
+Package pdftex.def Info: ./alg22.jpg  used on input line 324.
 (pdftex.def)             Requested size: 307.28987pt x 134.18532pt.
- [17
+ [20
 
 ]
 File: ./alg23.jpg Graphic file (type jpg)
 <use ./alg23.jpg>
-Package pdftex.def Info: ./alg23.jpg  used on input line 293.
+Package pdftex.def Info: ./alg23.jpg  used on input line 331.
 (pdftex.def)             Requested size: 264.48747pt x 219.82071pt.
 
-Overfull \vbox (7.41159pt too high) detected at line 293
+Overfull \vbox (7.41159pt too high) detected at line 331
  []
 
-[18
+[21
 
-] [19
+] [22
 
 ]
-<./graph1.jpg, id=515, 769.87625pt x 620.3175pt>
+<./graph1.jpg, id=591, 769.87625pt x 620.3175pt>
 File: ./graph1.jpg Graphic file (type jpg)
 <use ./graph1.jpg>
-Package pdftex.def Info: ./graph1.jpg  used on input line 314.
+Package pdftex.def Info: ./graph1.jpg  used on input line 352.
 (pdftex.def)             Requested size: 269.46072pt x 217.11438pt.
 
-Overfull \vbox (4.70526pt too high) detected at line 314
+Overfull \vbox (4.70526pt too high) detected at line 352
  []
 
-[20
+[23
 
  <./graph1.jpg>]
-<./graph2.jpg, id=541, 769.87625pt x 316.18124pt>
+<./graph2.jpg, id=617, 769.87625pt x 316.18124pt>
 File: ./graph2.jpg Graphic file (type jpg)
 <use ./graph2.jpg>
-Package pdftex.def Info: ./graph2.jpg  used on input line 323.
+Package pdftex.def Info: ./graph2.jpg  used on input line 361.
 (pdftex.def)             Requested size: 307.28987pt x 126.2049pt.
- [21
+ [24
 
  <./graph2.jpg>]
-<./table1.jpg, id=567, 775.89874pt x 161.60374pt>
+<./table1.jpg, id=643, 775.89874pt x 161.60374pt>
 File: ./table1.jpg Graphic file (type jpg)
 <use ./table1.jpg>
-Package pdftex.def Info: ./table1.jpg  used on input line 334.
+Package pdftex.def Info: ./table1.jpg  used on input line 372.
 (pdftex.def)             Requested size: 307.28987pt x 64.00168pt.
- [22
+ [25
 
- <./table1.jpg>] [23
+ <./table1.jpg>] [26
 
 ]
 \tf@nav=\write6
@@ -1036,13 +1042,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 21968 strings out of 478238
- 427633 string characters out of 5850456
- 682067 words of memory out of 5000000
- 39683 multiletter control sequences out of 15000+600000
+ 21979 strings out of 478238
+ 427737 string characters out of 5850456
+ 682074 words of memory out of 5000000
+ 39688 multiletter control sequences out of 15000+600000
  479803 words of font info for 66 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,19n,122p,428b,562s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 128i,19n,122p,428b,564s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public
@@ -1053,10 +1059,10 @@ dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb></usr/share/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsf
 onts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.p
 fb>
-Output written on main.pdf (23 pages, 465494 bytes).
+Output written on main.pdf (26 pages, 472238 bytes).
 PDF statistics:
- 677 PDF objects out of 1000 (max. 8388607)
- 608 compressed objects within 7 object streams
- 47 named destinations out of 1000 (max. 500000)
+ 754 PDF objects out of 1000 (max. 8388607)
+ 682 compressed objects within 7 object streams
+ 53 named destinations out of 1000 (max. 500000)
  88 words of extra memory for PDF output out of 10000 (max. 10000000)
 
