@@ -21,11 +21,20 @@ class Arc:
         self.flow = 0
         self.aonFlow = 0
         self.time = self.ffTime
+        self.der = 0
 
     def updateArcTime(self):
         #  newTime = self.ffTime*(1+self.b*((self.flow/self.capacity)**self.power))
         newTime = self.getTime(self.flow)
         self.time = newTime
+
+    def updateArcTimeDer(self):
+        self.der = self.getArcTimeDer()
+
+    def getArcTimeDer(self):
+        const = (self.ffTime*self.b*self.power)/self.capacity
+        factor = (self.flow/self.capacity)**(self.power-1)
+        return const*factor
 
     def getTime(self, flow):
         newTime = self.ffTime*(1+self.b*((flow/self.capacity)**self.power))
@@ -52,6 +61,15 @@ class Node:
 
     def addAdjArc(self, num):
         self.adjArcs.append(num)
+
+
+class PathFlowObj:
+    def __init__(self, path=[], flow=0):
+        self.path = path
+        self.flow = flow
+
+    def setFlow(self, flow):
+        self.flow = flow
 
 
 def readData(path):
@@ -101,6 +119,7 @@ def readData(path):
             arcNum += 1
 
     return metaDataDict, arcs, nodes
+
 
 def readFlowData(path):
     flow = 0.0
@@ -294,20 +313,22 @@ def checkPaths(path1, path2, numNodes):
 
 
 def initMSA(nodes, arcs, odMat, numNodes, numLinks):
-    for i in range(numNodes):
+    numZones = odMat.shape[0]
+    for i in range(numZones):
         origin = i+1
         pathDict, pathArcDict = labelCorrecting(
             origin, nodes, arcs,
             numNodes, numLinks
         )
 
-        for j in range(numNodes):
+        for j in range(numZones):
             destination = j+1
             for arcNum in pathArcDict[destination]:
                 thisArc = arcs[arcNum-1]
                 thisArcHead = thisArc.headNode
                 thisArcTail = thisArc.tailNode
-                thisArcDemand = odMat[thisArcHead-1][thisArcTail-1]
+                #thisArcDemand = odMat[thisArcHead-1][thisArcTail-1]
+                thisArcDemand = odMat[i][j]
                 thisArc.aonFlow += thisArcDemand
 
     tot1 = 0
@@ -320,26 +341,28 @@ def initMSA(nodes, arcs, odMat, numNodes, numLinks):
 
 
 def msa(nodes, arcs, odMat, numNodes, numLinks):
+    print("started msa")
     arcs = initMSA(nodes, arcs, odMat, numNodes, numLinks)
+    print("finished init")
     k = 1
     gap = float('inf')
+    numZones = odMat.shape[0]
 
     data = []
-    iter = 0
     while gap > 1e-4:
         for arc in arcs:
             arc.flow = arc.aonFlow/k + (1-1/k)*arc.flow
             arc.updateArcTime()
             arc.aonFlow = 0
 
-        for i in range(numNodes):
+        for i in range(numZones):
             origin = i+1
             pathDict, pathArcDict = labelSetting(
                 origin, nodes, arcs,
                 numNodes, numLinks
             )
 
-            for j in range(numNodes):
+            for j in range(numZones):
                 destination = j+1
                 for arcNum in pathArcDict[destination]:
                     arcs[arcNum-1].aonFlow += odMat[i][j]
@@ -368,6 +391,7 @@ def frankWolfe(nodes, arcs, odMat, numNodes, numLinks):
     k = 1
     gap = float('inf')
     data = []
+    numZones = odMat.shape[0]
 
     while gap > 1e-4:
         if k==1:
@@ -381,14 +405,14 @@ def frankWolfe(nodes, arcs, odMat, numNodes, numLinks):
             arc.updateArcTime()
             arc.aonFlow = 0
 
-        for i in range(numNodes):
+        for i in range(numZones):
             origin = i+1
             pathDict, pathArcDict = labelCorrecting(
                 origin, nodes, arcs,
                 numNodes, numLinks
             )
 
-            for j in range(numNodes):
+            for j in range(numZones):
                 destination = j+1
                 for arcNum in pathArcDict[destination]:
                     arcs[arcNum-1].aonFlow += odMat[i][j]
@@ -459,6 +483,119 @@ def bisection(arcs):
     return eta
 
 
+def getPathTime(path, arcs):
+    time = 0
+    for arcNum in path:
+        time += arcs[arcNum-1].time
+
+    return time
+
+
+def gradProj(nodes, arcs, odMat, numNodes, numLinks):
+    numZones = odMat.shape[0]
+
+    p_hat = {}
+    p_hat_set = {}
+    for i in range(numZones):
+        for j in range(numZones):
+            if i==j:
+                continue
+
+            p_hat[(i+1,j+1)] = []
+            p_hat_set[(i+1, j+1)] = []
+
+    gap = float('inf')
+    iteration = -1
+
+    while gap > 1e-2:
+        for i in range(numZones):
+            origin = i+1
+            pathDict, pathArcDict = labelCorrecting(
+                origin, nodes, arcs,
+                numNodes, numLinks
+            )
+
+            for j in range(numZones):
+                if j==i:
+                    continue
+
+                destination = j+1
+                p_star = pathArcDict[destination]
+
+                for arcNum in p_star:
+                    arcs[arcNum-1].aonFlow += odMat[i][j]
+
+                tau_star = getPathTime(p_star, arcs)
+
+                if p_star not in p_hat_set[(origin, destination)]:
+                    p_hat_set[(origin, destination)].append(p_star)
+                    p_hat[(origin, destination)].append(PathFlowObj(p_star, 0))
+
+                else:
+                    index = p_hat_set[(origin, destination)].index(p_star)
+                    p_hat_set[(origin, destination)][index],\
+                        p_hat_set[(origin, destination)][-1] = \
+                        p_hat_set[(origin, destination)][-1],\
+                        p_hat_set[(origin, destination)][index]
+
+                    p_hat[(origin, destination)][index],\
+                        p_hat[(origin, destination)][-1] = \
+                        p_hat[(origin, destination)][-1],\
+                        p_hat[(origin, destination)][index]
+
+                if len(p_hat_set[(origin, destination)])==1:
+                    p_hat[(origin, destination)][0].flow = odMat[i][j]
+
+                    for arcNum in p_hat[(origin, destination)][0].path:
+                        arcs[arcNum-1].flow += odMat[i][j]
+
+                else:
+                    for pathObj in p_hat[(origin, destination)][:-1]:
+                        link_symm_diff = set(pathObj.path).symmetric_difference(set(p_star))
+                        denominator = 0
+                        for arcNum in link_symm_diff:
+                            denominator += arcs[arcNum-1].der
+
+                        tau = getPathTime(pathObj.path, arcs)
+
+                        flowShift = min(pathObj.flow,
+                                        (tau-tau_star)/denominator)
+
+                        pathObj.flow -= flowShift
+                        p_hat[(origin, destination)][-1].flow += flowShift
+
+                        for arcNum in pathObj.path:
+                            arcs[arcNum-1].flow -= flowShift
+
+                        for arcNum in p_hat[(origin, destination)][-1].path:
+                            arcs[arcNum-1].flow += flowShift
+
+
+                p_hat_set[(origin, destination)] = [x.path for x in
+                                                    p_hat[(origin, destination)]
+                                                    if x.flow != 0]
+
+                p_hat[(origin, destination)] = [x for x in p_hat[(origin, destination)]
+                                                if x.flow != 0]
+
+            for j in range(numZones):
+                if j==i:
+                    continue
+                destination = j+1
+                for pathObj in p_hat[(origin, destination)]:
+                    for arcNum in pathObj.path:
+                        arcs[arcNum-1].updateArcTime()
+                        arcs[arcNum-1].updateArcTimeDer()
+
+        iteration+=1
+        gap = getRelGap(arcs)
+        for arc in arcs:
+            arc.aonFlow = 0
+        print(iteration)
+        print(gap)
+
+
+
 
 if __name__ == "__main__":
     metaDataDict, arcs, nodes = readData('./SiouxFalls_net.tntp')
@@ -474,10 +611,11 @@ if __name__ == "__main__":
 
     print(pathDict)
     print(pathArcDict)
-    data1 = msa(nodes, arcs, odMat, numNodes, numLinks)
-    data2 = frankWolfe(nodes, arcs, odMat, numNodes, numLinks)
+    #data1 = msa(nodes, arcs, odMat, numNodes, numLinks)
+    #data2 = frankWolfe(nodes, arcs, odMat, numNodes, numLinks)
+    gradProj(nodes, arcs, odMat, numNodes, numLinks)
 
-    plt.plot(data1[10:, 0], data1[10:, 1], label="msa")
-    plt.plot(data2[10:, 0], data2[10:, 1], label="fw")
-    plt.legend()
-    plt.savefig("combined.png")
+    #plt.plot(data1[10:, 0], data1[10:, 1], label="msa")
+    #plt.plot(data2[10:, 0], data2[10:, 1], label="fw")
+    #plt.legend()
+    #plt.savefig("combined_chicago.png")
