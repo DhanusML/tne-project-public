@@ -24,7 +24,6 @@ class Arc:
         self.der = 0
 
     def updateArcTime(self):
-        #  newTime = self.ffTime*(1+self.b*((self.flow/self.capacity)**self.power))
         newTime = self.getTime(self.flow)
         self.time = newTime
 
@@ -33,7 +32,7 @@ class Arc:
 
     def getArcTimeDer(self):
         const = (self.ffTime*self.b*self.power)/self.capacity
-        factor = (self.flow/self.capacity)**(self.power-1)
+        factor = (1+self.b*(self.flow/self.capacity))**(self.power-1)
         return const*factor
 
     def getTime(self, flow):
@@ -327,7 +326,6 @@ def initMSA(nodes, arcs, odMat, numNodes, numLinks):
                 thisArc = arcs[arcNum-1]
                 thisArcHead = thisArc.headNode
                 thisArcTail = thisArc.tailNode
-                #thisArcDemand = odMat[thisArcHead-1][thisArcTail-1]
                 thisArcDemand = odMat[i][j]
                 thisArc.aonFlow += thisArcDemand
 
@@ -494,6 +492,7 @@ def getPathTime(path, arcs):
 def gradProj(nodes, arcs, odMat, numNodes, numLinks):
     numZones = odMat.shape[0]
 
+    #  Initialization
     p_hat = {}
     p_hat_set = {}
     for i in range(numZones):
@@ -507,7 +506,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
     gap = float('inf')
     iteration = -1
 
-    while gap > 1e-2:
+    while iteration < 1:
         for i in range(numZones):
             origin = i+1
             pathDict, pathArcDict = labelCorrecting(
@@ -557,9 +556,12 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                             denominator += arcs[arcNum-1].der
 
                         tau = getPathTime(pathObj.path, arcs)
+                        #print("tau - tau_star", tau-tau_star)
+                        #print("denominator ", denominator)
 
                         flowShift = min(pathObj.flow,
                                         (tau-tau_star)/denominator)
+                        #print("flowShift", flowShift)
 
                         pathObj.flow -= flowShift
                         p_hat[(origin, destination)][-1].flow += flowShift
@@ -571,13 +573,21 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                             arcs[arcNum-1].flow += flowShift
 
 
+
                 p_hat_set[(origin, destination)] = [x.path for x in
                                                     p_hat[(origin, destination)]
                                                     if x.flow != 0]
 
-                p_hat[(origin, destination)] = [x for x in p_hat[(origin, destination)]
+                p_hat[(origin, destination)] = [x for x in
+                                                p_hat[(origin, destination)]
                                                 if x.flow != 0]
+                print("* ", origin, destination, end=' - ')
+                for pathObj in p_hat[(origin, destination)]:
+                    print(pathObj.path, pathObj.flow, end=';')
+                print()
 
+        for i in range(numZones):
+            origin = i+1
             for j in range(numZones):
                 if j==i:
                     continue
@@ -589,28 +599,37 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
 
         iteration+=1
         gap = getRelGap(arcs)
+        sumFlows = 0
+        sum2Flows = 0
         for arc in arcs:
+            # print(arc.aonFlow)
+            sumFlows += arc.aonFlow
+            sum2Flows += arc.flow
             arc.aonFlow = 0
-        print(iteration)
-        print(gap)
+
+        print("sum flow ", sumFlows)
+        print("sum2Flows ", sum2Flows)
+        print("iteration ", iteration)
+        print("gap ", gap)
 
 
 
 
 if __name__ == "__main__":
-    metaDataDict, arcs, nodes = readData('./SiouxFalls_net.tntp')
+    network = 'SiouxFalls'
+    metaDataDict, arcs, nodes = readData(f'./data/{network}/{network}_net.tntp')
     #metaDataDict, arcs, nodes = readData('./ChicagoSketch_net.tntp')
     numNodes = metaDataDict['numNodes']
     numLinks = metaDataDict['numLinks']
     print(metaDataDict)
 
-    odMat = readFlowData('./SiouxFalls_trips.tntp')
+    odMat = readFlowData(f'./data/{network}/{network}_trips.tntp')
     #odMat = readFlowData('./ChicagoSketch_trips.tntp')
 
-    pathDict, pathArcDict = labelCorrecting(1, nodes, arcs, numNodes, numLinks)
+    #pathDict, pathArcDict = labelCorrecting(1, nodes, arcs, numNodes, numLinks)
 
-    print(pathDict)
-    print(pathArcDict)
+    #print(pathDict)
+    #print(pathArcDict)
     #data1 = msa(nodes, arcs, odMat, numNodes, numLinks)
     #data2 = frankWolfe(nodes, arcs, odMat, numNodes, numLinks)
     gradProj(nodes, arcs, odMat, numNodes, numLinks)
@@ -618,4 +637,5 @@ if __name__ == "__main__":
     #plt.plot(data1[10:, 0], data1[10:, 1], label="msa")
     #plt.plot(data2[10:, 0], data2[10:, 1], label="fw")
     #plt.legend()
+    #plt.show()
     #plt.savefig("combined_chicago.png")
