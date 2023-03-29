@@ -507,7 +507,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
     gap = float('inf')
     iteration = -1
 
-    while iteration < 1000:
+    while iteration < 1:
         for i in range(numZones):
             origin = i+1
             pathDict, pathArcDict = labelCorrecting(
@@ -522,8 +522,10 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                 destination = j+1
                 p_star = pathArcDict[destination]
 
+                '''
                 for arcNum in p_star:
                     arcs[arcNum-1].aonFlow += odMat[i][j]
+                '''
 
                 tau_star = getPathTime(p_star, arcs)
 
@@ -607,6 +609,23 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                     for arcNum in pathObj.path:
                         arcs[arcNum-1].flow += pathObj.flow
 
+                if len(p_hat[(origin, destination)]):
+                    for arcNum in p_hat[(origin, destination)][-1].path:
+                        arcs[arcNum-1].aonFlow += odMat[i][j]
+
+
+        for i in range(numZones):
+            origin = i+1
+            for j in range(numZones):
+                if j==i:
+                    continue
+                destination = j+1
+                print(origin, destination, end=' - ')
+                for pathObj in p_hat[(origin, destination)]:
+                    thisTime = round(getPathTime(pathObj.path, arcs),2)
+                    print(pathObj.path,'--', [round(arcs[num-1].flow,2) for num in pathObj.path],
+                          round(pathObj.flow,2), thisTime, end=';')
+                print()
 
         tot_flow = 0
         for i in range(numZones):
@@ -622,18 +641,6 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                         arcs[arcNum-1].updateArcTimeDer()
 
 
-        for i in range(numZones):
-            origin = i+1
-            for j in range(numZones):
-                if j==i:
-                    continue
-                destination = j+1
-                print(origin, destination, end=' - ')
-                for pathObj in p_hat[(origin, destination)]:
-                    thisTime = round(getPathTime(pathObj.path, arcs),2)
-                    print(pathObj.path,'--', [round(arcs[num-1].flow,2) for num in pathObj.path],
-                          round(pathObj.flow,2), thisTime, end=';')
-                print()
 
         print("total flow", tot_flow)
 
