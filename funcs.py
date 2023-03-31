@@ -510,7 +510,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
     tstt = float('inf')
     iteration = -1
 
-    while iteration < 20:
+    while iteration < 200000:
         # sleep(1)
         sptt = 0
         for i in range(numZones):
@@ -560,6 +560,9 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                         tau = getPathTime(pathObj.path, arcs)
                         #print("tau - tau_star", tau-tau_star)
                         #print("denominator ", denominator)
+                        #denominator = 1/(iteration+2)
+                        denominator*=(1/(iteration+2))
+                        denominator = 1
 
                         flowShift = min(pathObj.flow,
                                         (tau-tau_star)/denominator)
@@ -576,8 +579,9 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
 
                 #tstt += p_hat[(origin, destination)][-1].flow*tau_star
 
-                for arcNum in p_hat[(origin, destination)][-1].path:
-                    arcs[arcNum-1].flow += p_hat[(origin,destination)][-1].flow
+                for pathObj in p_hat[(origin, destination)]:
+                    for arcNum in pathObj.path:
+                        arcs[arcNum-1].flow += pathObj.flow
 
 
                 p_hat_set[(origin, destination)] = [x.path for x in
@@ -587,7 +591,6 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                 p_hat[(origin, destination)] = [x for x in
                                                 p_hat[(origin, destination)]
                                                 if x.flow != 0]
-
             for arc in arcs:
                 arc.updateArcTime()
                 arc.updateArcTimeDer()
@@ -605,6 +608,14 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                     print(pathObj.path,'--', [round(arcs[num-1].flow,2) for num in pathObj.path],
                           round(pathObj.flow,2), thisTime, end=';')
                 print()
+
+            '''
+            for arc in arcs:
+                arc.updateArcTime()
+                arc.updateArcTimeDer()
+            '''
+
+
 
 
         tot_flow = 0
@@ -624,7 +635,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
 
         tstt = 0
         for arc in arcs:
-            tstt+=arc.flow*arc.time
+            tstt+=(arc.flow*arc.time)
 
 
         print("total flow", tot_flow)
