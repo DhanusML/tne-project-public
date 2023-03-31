@@ -9,7 +9,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
     numZones = odMat.shape[0]
     iteration = 0
 
-    while iteration < 10:
+    while iteration < 10000:
         for i in range(numZones):
             origin = i+1
 
@@ -38,23 +38,16 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                         if len(a_hat)==0:
                             flowUpdate = pathObj.flow
                         else:
-                            #denom = sum([arcs[x-1].der for x in a_hat])
-                            denom = 0
-                            for arcNum in a_hat:
-                                denom+=arcs[arcNum-1].der
+                            denom = sum([arcs[x-1].der for x in a_hat])
                             flowUpdate = min(pathObj.flow,
                                              (tau-tau_star)/denom)
 
                         if flowUpdate<0:
                             raise(ValueError("flow change must be positive"))
 
-                        pathObj.flow -= flowUpdate
-                        p_hat[(origin, destination)][-1].flow += flowUpdate
+                        updateFlows(pathObj, p_hat[(origin, destination)][-1],
+                                    flowUpdate, arcs)
 
-
-            for pathObj in p_hat[(origin, destination)]:
-                for arcNum in pathObj.path:
-                    arcs[arcNum-1].flow += pathObj.flow
 
             for arc in arcs:
                 arc.updateArcTime()
@@ -73,11 +66,18 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
         print("sptt: ", sptt)
         print("gap: ", gap)
 
-        for arc in arcs:
-            arc.flow = 0
-
         iteration += 1
 
+
+def updateFlows(oldPath, newPath, change, arcs):
+    oldPath.flow -= change
+    newPath.flow += change
+
+    for arcNum in oldPath.path:
+        arcs[arcNum-1].flow -= change
+
+    for arcNum in newPath.path:
+        arcs[arcNum-1].flow += change
 
 
 
