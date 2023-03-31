@@ -506,12 +506,13 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
             p_hat_set[(i+1, j+1)] = []
 
     gap = float('inf')
+    sptt = 0
+    tstt = float('inf')
     iteration = -1
 
-    while iteration < 31:
+    while iteration < 20:
         # sleep(1)
         sptt = 0
-        tstt = 0
         for i in range(numZones):
             origin = i+1
             pathDict, pathArcDict = labelCorrecting(
@@ -525,11 +526,6 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
 
                 destination = j+1
                 p_star = pathArcDict[destination]
-
-                '''
-                for arcNum in p_star:
-                    arcs[arcNum-1].aonFlow += odMat[i][j]
-                '''
 
                 tau_star = getPathTime(p_star, arcs)
                 sptt += odMat[i][j]*tau_star
@@ -553,10 +549,6 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                 if len(p_hat[(origin, destination)])==1:
                     p_hat[(origin, destination)][0].flow = odMat[i][j]
 
-                    '''
-                    for arcNum in p_hat[(origin, destination)][0].path:
-                        arcs[arcNum-1].flow += odMat[i][j]
-                    '''
 
                 else:
                     for pathObj in p_hat[(origin, destination)][:-1]:
@@ -577,24 +569,15 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
 
                         pathObj.flow -= flowShift
                         p_hat[(origin, destination)][-1].flow += flowShift
-                        tstt += tau*pathObj.flow
+                        #tstt += tau*pathObj.flow
 
                         for arcNum in pathObj.path:
                             arcs[arcNum-1].flow += pathObj.flow
 
-                tstt += p_hat[(origin, destination)][-1].flow*tau_star
+                #tstt += p_hat[(origin, destination)][-1].flow*tau_star
+
                 for arcNum in p_hat[(origin, destination)][-1].path:
                     arcs[arcNum-1].flow += p_hat[(origin,destination)][-1].flow
-
-
-                '''
-                for arcNum in pathObj.path:
-                    arcs[arcNum-1].flow -= flowShift
-
-                for arcNum in p_hat[(origin, destination)][-1].path:
-                    arcs[arcNum-1].flow += flowShift
-                '''
-
 
 
                 p_hat_set[(origin, destination)] = [x.path for x in
@@ -609,70 +592,11 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                 arc.updateArcTime()
                 arc.updateArcTimeDer()
 
-            for j in range(numZones):
-                if i==j:
-                    continue
-                destination = j+1
 
-
-                for pathObj in p_hat[(origin, destination)]:
-                    for arcNum in pathObj.path:
-                        pass
-                        #arcs[arcNum-1].flow += pathObj.flow
-                        #arcs[arcNum-1].updateArcTime()
-                        #arcs[arcNum-1].updateArcTimeDer()
-
-                '''
-                p_hat_set[(origin, destination)] = [x.path for x in
-                                                    p_hat[(origin, destination)]
-                                                    if x.flow != 0]
-
-                p_hat[(origin, destination)] = [x for x in
-                                                p_hat[(origin, destination)]
-                                                if x.flow != 0]
-
-                '''
-
-                '''
-                if len(p_hat[(origin, destination)]):
-                    for arcNum in p_hat[(origin, destination)][-1].path:
-                        arcs[arcNum-1].aonFlow += odMat[i][j]
-                        arcs[arcNum-1].updateArcTime()
-                        arcs[arcNum-1].updateArcTimeDer()
-                '''
-
-                '''
-                print(origin, destination, end=' - ')
-                for pathObj in p_hat[(origin, destination)]:
-                    thisTime = round(getPathTime(pathObj.path, arcs),2)
-                    print(pathObj.path,'--', [round(arcs[num-1].flow,2) for num in pathObj.path],
-                          round(pathObj.flow,2), thisTime, end=';')
-                print()
-                '''
-
-        '''
-        for i in range(numZones):
-            origin = i+1
-
-            for j in range(numZones):
-                if i==j:
-                    continue
-                destination = j+1
-                for pathObj in p_hat[(origin, destination)]:
-                    for arcNum in pathObj.path:
-                        arcs[arcNum-1].flow += pathObj.flow
-
-                if len(p_hat[(origin, destination)]):
-                    for arcNum in p_hat[(origin, destination)][-1].path:
-                        arcs[arcNum-1].aonFlow += odMat[i][j]
-        '''
-
-
-        '''
         for i in range(numZones):
             origin = i+1
             for j in range(numZones):
-                if j==i:
+                if i==j:
                     continue
                 destination = j+1
                 print(origin, destination, end=' - ')
@@ -681,7 +605,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                     print(pathObj.path,'--', [round(arcs[num-1].flow,2) for num in pathObj.path],
                           round(pathObj.flow,2), thisTime, end=';')
                 print()
-        '''
+
 
         tot_flow = 0
         for i in range(numZones):
@@ -694,36 +618,22 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                     tot_flow += pathObj.flow
 
         #gap = getRelGap(arcs)
-        #tstt = 0
-        #for arc in arcs:
-        #    tstt+=arc.flow*arc.time
         print("tstt: ", tstt)
         print("sptt: ", sptt)
         gap = tstt/sptt - 1
-        #print("gap ", gap)
 
-        '''
+        tstt = 0
         for arc in arcs:
-            arc.updateArcTime()
-            arc.updateArcTimeDer()
-        '''
+            tstt+=arc.flow*arc.time
+
 
         print("total flow", tot_flow)
 
-        iteration+=1
-        #gap = getRelGap(arcs)
-        sumFlows = 0
-        sum2Flows = 0
+        iteration += 1
         for arc in arcs:
-            sumFlows += arc.aonFlow
-            sum2Flows += arc.flow
             arc.aonFlow = 0
             arc.flow = 0
 
-        '''
-        print("sum flow ", sumFlows)
-        print("sum2Flows ", sum2Flows)
-        '''
         print("iteration ", iteration)
         print("gap ", gap)
         print()
