@@ -35,12 +35,11 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
                     for pathObj in p_hat[(origin, destination)][:-1]:
                         tau = getPathTime(pathObj.path, arcs)
                         a_hat = set(pathObj.path).symmetric_difference(set(p_star))
-                        if len(a_hat)==0:
-                            flowUpdate = pathObj.flow
-                        else:
-                            denom = sum([arcs[x-1].der for x in a_hat])
-                            flowUpdate = min(pathObj.flow,
-                                             (tau-tau_star)/denom)
+                        #denom = sum([arcs[x-1].der for x in a_hat])
+                        denom = 1
+                        flowUpdate = min(pathObj.flow,
+                                         (tau-tau_star)/denom)
+
 
                         if flowUpdate<0:
                             raise(ValueError("flow change must be positive"))
