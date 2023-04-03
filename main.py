@@ -14,5 +14,8 @@ if __name__ == "__main__":
     odMat = readFlowData(f'./data/{network}/{network}_trips.tntp')
 
     gradProj(nodes, arcs, odMat, numNodes, numLinks)
+
+    #  reset the arcs #
+    metaDataDict, arcs, nodes = readData(f'./data/{network}/{network}_net.tntp')
     greedy(nodes, arcs, odMat, numNodes, numLinks)
 
