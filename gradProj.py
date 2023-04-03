@@ -1,6 +1,7 @@
 from dataStructures import Arc, PathFlowObj
 from funcs import labelCorrecting
-
+from pathBasedHelpers import getConvergenceParams, getPathTime,\
+    printPathFlow
 
 
 def gradProj(nodes, arcs, odMat, numNodes, numLinks):
@@ -55,15 +56,14 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
         for key in p_hat.keys():  # remove paths with zero flow
             p_hat[key] = [x for x in p_hat[key] if x.flow != 0]
 
-        tstt = getTSTT(arcs)
-        sptt = getSPTT(nodes, arcs, odMat, numNodes, numLinks)
-
-        gap = tstt/sptt - 1
+        gap, tstt, sptt = getConvergenceParams(nodes, arcs, odMat,
+                                               numNodes, numLinks)
 
         print("iteration: ", iteration)
         print("tstt: ", tstt)
         print("sptt: ", sptt)
         print("gap: ", gap)
+        print()
 
         iteration += 1
 
@@ -79,42 +79,6 @@ def updateFlows(oldPath, newPath, change, arcs):
         arcs[arcNum-1].flow += change
 
 
-
-def getTSTT(arcs):
-    tstt = 0
-    for arc in arcs:
-        tstt += (arc.flow*arc.time)
-
-    return tstt
-
-def getSPTT(nodes, arcs, odMat, numNodes, numLinks):
-    sptt = 0
-    numZones = odMat.shape[0]
-    for i in range(numZones):
-        origin = i+1
-        _, pathArcDict = labelCorrecting(
-            origin, nodes, arcs, numNodes, numLinks
-        )
-        for j in range(numZones):
-            if j==i:
-                continue
-            destination = j+1
-            demand = odMat[i][j]
-            p_star = pathArcDict[destination]
-            sptt += demand*getPathTime(p_star, arcs)
-
-    return sptt
-
-
-
-def getPathTime(path, arcs):
-    tot_time = 0
-    for arcNum in path:
-        tot_time += arcs[arcNum-1].time
-
-    return tot_time
-
-
 def addPath(p_star, paths):
     pathList = [x.path for x in paths]
     if p_star not in pathList:
@@ -123,29 +87,6 @@ def addPath(p_star, paths):
     else:  # put the shortest path to the top
         thisIndex = pathList.index(p_star)
         paths[thisIndex], paths[-1] = paths[-1], paths[thisIndex]
-
-
-
-def printPathFlow(p_hat, arcs, odMat):
-    numZones = odMat.shape[0]
-
-    for i in range(numZones):
-        origin = i+1
-
-        for j in range(numZones):
-            if j==i:
-                continue
-            destination = j+1
-
-            print(origin, destination, end='-->')
-            for pathObj in p_hat[(origin, destination)]:
-                print(pathObj.path,
-                      [arcs[x-1].flow for x in pathObj.path],
-                      round(pathObj.flow,2),
-                      round(sum([arcs[x-1].time for x in pathObj.path]),2),
-                      sep='--', end='|')
-                print()
-
 
 
 def initializeGradProj(nodes, arcs, odMat, numNodes, numLinks):

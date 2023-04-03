@@ -13,6 +13,6 @@ if __name__ == "__main__":
 
     odMat = readFlowData(f'./data/{network}/{network}_trips.tntp')
 
-    #  gradProj(nodes, arcs, odMat, numNodes, numLinks)
+    gradProj(nodes, arcs, odMat, numNodes, numLinks)
     greedy(nodes, arcs, odMat, numNodes, numLinks)
 

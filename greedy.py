@@ -106,8 +106,6 @@ def greedyLoop(paths, arcs, demand):
     B = 1/(currentS*demand)
     C = currentC/(currentS*demand)
     w_bar = (1 + C)/B
-    #print("w_bar ", w_bar)
-    #print("c ", c)
 
     newPaths = [paths[currentIndex]]
     currentIndex = 1
@@ -126,7 +124,6 @@ def greedyLoop(paths, arcs, demand):
         newPaths.append(paths[currentIndex])
         currentIndex += 1
 
-    #print("len new paths ", len(newPaths))
 
     for i, pathObj in enumerate(newPaths):
         newFlow = (w_bar - c[i])/s[i]
@@ -191,4 +188,3 @@ def initializeGreedy(nodes, arcs, odMat, numNodes, numLinks):
         arc.updateArcTimeDer()
 
     return p_hat
-
