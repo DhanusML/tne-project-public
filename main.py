@@ -1,5 +1,6 @@
 from gradProj import gradProj
 from funcs import readData, readFlowData
+from greedy import greedy
 
 
 if __name__ == "__main__":
@@ -12,5 +13,6 @@ if __name__ == "__main__":
 
     odMat = readFlowData(f'./data/{network}/{network}_trips.tntp')
 
-    gradProj(nodes, arcs, odMat, numNodes, numLinks)
+    #  gradProj(nodes, arcs, odMat, numNodes, numLinks)
+    greedy(nodes, arcs, odMat, numNodes, numLinks)
 

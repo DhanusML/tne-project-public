@@ -61,6 +61,7 @@ class PathFlowObj:
     def __init__(self, path=[], flow=0):
         self.path = path
         self.flow = flow
+        self.newFlow = 0
 
     def setFlow(self, flow):
         self.flow = flow
