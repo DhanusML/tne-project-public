@@ -1,7 +1,7 @@
 import numpy as np
 from dataStructures import Arc, PathFlowObj
 from funcs import labelCorrecting
-from pathBasedHelpers import updateFlows, getConvergenceParams, getPathTime,\
+from pathBasedHelpers import getConvergenceParams, getPathTime,\
     printPathFlow
 
 
@@ -70,10 +70,12 @@ def greedy(nodes, arcs, odMat, numNodes, numLinks):
         gap, tstt, sptt = getConvergenceParams(nodes, arcs, odMat,
                                                numNodes, numLinks)
 
+        #printPathFlow(p_hat, arcs, odMat)
         print("iteration: ", iteration)
         print("tstt: ", tstt)
         print("sptt: ", sptt)
         print("gap: ", gap)
+        print()
         iteration += 1
 
 
@@ -104,13 +106,18 @@ def greedyLoop(paths, arcs, demand):
     B = 1/(currentS*demand)
     C = currentC/(currentS*demand)
     w_bar = (1 + C)/B
+    #print("w_bar ", w_bar)
+    #print("c ", c)
 
     newPaths = [paths[currentIndex]]
     currentIndex = 1
 
-    while currentIndex<len(paths) and currentC<w_bar:
+    while currentIndex<len(paths):
         currentS = s[currentIndex]
         currentC = c[currentIndex]
+
+        if currentC >= w_bar:
+            break
 
         C += currentC/(currentS*demand)
         B +=  1/(currentS*demand)
@@ -119,8 +126,13 @@ def greedyLoop(paths, arcs, demand):
         newPaths.append(paths[currentIndex])
         currentIndex += 1
 
+    #print("len new paths ", len(newPaths))
+
     for i, pathObj in enumerate(newPaths):
         newFlow = (w_bar - c[i])/s[i]
+        if newFlow < 0:
+            #raise(ValueError("newFlow should be non-negative"))
+            pass
         pathObj.newFlow = newFlow
 
     for pathObj in paths:

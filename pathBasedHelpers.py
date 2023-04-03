@@ -71,14 +71,14 @@ def printPathFlow(p_hat, arcs, odMat):
         origin = i+1
 
         for j in range(numZones):
-            if j==i:
+            if j==i or odMat[i][j]==0:
                 continue
             destination = j+1
 
             print(origin, destination, end='-->')
             for pathObj in p_hat[(origin, destination)]:
                 print(pathObj.path,
-                      [arcs[x-1].flow for x in pathObj.path],
+                      [round(arcs[x-1].flow, 2) for x in pathObj.path],
                       round(pathObj.flow,2),
                       round(sum([arcs[x-1].time for x in pathObj.path]),2),
                       sep='--', end='|')
