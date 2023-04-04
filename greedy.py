@@ -5,14 +5,15 @@ from pathBasedHelpers import getConvergenceParams, getPathTime,\
     printPathFlow
 
 
-def greedy(nodes, arcs, odMat, numNodes, numLinks):
+def greedy(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
+    data = []
     p_hat = initializeGreedy(nodes, arcs, odMat, numNodes, numLinks)
     gap = float('inf')
-    delta = float('inf')
+    delta = 0#float('inf')
     numZones = odMat.shape[0]
     iteration = 0
 
-    while iteration < 100:
+    while iteration < 1000 and gap>1e-5:
         for i in range(numZones):
             origin = i+1
 
@@ -28,7 +29,6 @@ def greedy(nodes, arcs, odMat, numNodes, numLinks):
 
                 if p_star not in [x.path for x in p_hat[(origin, destination)]]:
                     p_hat[(origin, destination)].append(PathFlowObj(p_star,0))
-
 
                 ##  perform path flow adjustments ##
                 p_hat[(origin, destination)] = greedyLoop(
@@ -70,13 +70,18 @@ def greedy(nodes, arcs, odMat, numNodes, numLinks):
         gap, tstt, sptt = getConvergenceParams(nodes, arcs, odMat,
                                                numNodes, numLinks)
 
-        #printPathFlow(p_hat, arcs, odMat)
-        print("iteration: ", iteration)
-        print("tstt: ", tstt)
-        print("sptt: ", sptt)
-        print("gap: ", gap)
-        print()
+        if verbose:
+            #printPathFlow(p_hat, arcs, odMat)
+            print("iteration: ", iteration)
+            print("tstt: ", tstt)
+            print("sptt: ", sptt)
+            print("gap: ", gap)
+            print()
+        data.append([iteration, gap])
         iteration += 1
+
+    data = np.array(data)
+    return data
 
 
 def greedyLoop(paths, arcs, demand):

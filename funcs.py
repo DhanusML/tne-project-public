@@ -339,16 +339,14 @@ def initMSA(nodes, arcs, odMat, numNodes, numLinks):
 
 
 
-def msa(nodes, arcs, odMat, numNodes, numLinks):
-    print("started msa")
+def msa(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     arcs = initMSA(nodes, arcs, odMat, numNodes, numLinks)
-    print("finished init")
     k = 1
     gap = float('inf')
     numZones = odMat.shape[0]
 
     data = []
-    while gap > 1e-4:
+    while gap > 1e-4 and k<10000:
         for arc in arcs:
             arc.flow = arc.aonFlow/k + (1-1/k)*arc.flow
             arc.updateArcTime()
@@ -373,11 +371,12 @@ def msa(nodes, arcs, odMat, numNodes, numLinks):
                     thisArc.aonFlow += thisArcDemand
                     '''
 
-        print("iteration: ", k)
-        gap = getRelGap(arcs)
-        #gap = getAEC(arcs, odMat)
-        print(gap)
-        print()
+        if verbose:
+            print("iteration: ", k)
+            gap = getRelGap(arcs)
+            #gap = getAEC(arcs, odMat)
+            print(gap)
+            print()
         data.append([k, gap])
         k += 1
 
@@ -385,14 +384,14 @@ def msa(nodes, arcs, odMat, numNodes, numLinks):
 
 
 
-def frankWolfe(nodes, arcs, odMat, numNodes, numLinks):
+def frankWolfe(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     arcs = initMSA(nodes, arcs, odMat, numNodes, numLinks)
     k = 1
     gap = float('inf')
     data = []
     numZones = odMat.shape[0]
 
-    while gap > 1e-4:
+    while gap > 1e-4 and k<10000:
         if k==1:
             eta = 1
 
@@ -422,13 +421,14 @@ def frankWolfe(nodes, arcs, odMat, numNodes, numLinks):
                     thisArcDemand = odMat[i][j]
                     thisArc.aonFlow += thisArcDemand
                     '''
-        print("iteration: ", k)
-        gap = getRelGap(arcs)
-        #gap = getAEC(arcs, odMat)
-        print("gap: ", gap)
+        if verbose:
+            print("iteration: ", k)
+            gap = getRelGap(arcs)
+            #gap = getAEC(arcs, odMat)
+            print("gap: ", gap)
+            print()
         data.append([k, gap])
         k += 1
-        print()
 
     return np.array(data)
 

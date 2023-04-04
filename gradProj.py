@@ -1,16 +1,19 @@
+import numpy as np
 from dataStructures import Arc, PathFlowObj
 from funcs import labelCorrecting
 from pathBasedHelpers import getConvergenceParams, getPathTime,\
     printPathFlow
 
 
-def gradProj(nodes, arcs, odMat, numNodes, numLinks):
+def gradProj(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
+    data = []
     p_hat = initializeGradProj(nodes, arcs, odMat, numNodes, numLinks)
-    printPathFlow(p_hat, arcs, odMat)
+    #printPathFlow(p_hat, arcs, odMat)
     numZones = odMat.shape[0]
     iteration = 0
+    gap = float('inf')
 
-    while iteration < 10000:
+    while iteration < 1000 and gap>1e-5:
         for i in range(numZones):
             origin = i+1
 
@@ -59,13 +62,18 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks):
         gap, tstt, sptt = getConvergenceParams(nodes, arcs, odMat,
                                                numNodes, numLinks)
 
-        print("iteration: ", iteration)
-        print("tstt: ", tstt)
-        print("sptt: ", sptt)
-        print("gap: ", gap)
-        print()
+        if verbose:
+            print("iteration: ", iteration)
+            print("tstt: ", tstt)
+            print("sptt: ", sptt)
+            print("gap: ", gap)
+            print()
 
+        data.append([iteration, gap])
         iteration += 1
+
+    data = np.array(data)
+    return data
 
 
 def updateFlows(oldPath, newPath, change, arcs):
