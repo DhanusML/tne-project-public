@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from dataStructures import Arc, PathFlowObj
 from funcs import labelCorrecting
 from pathBasedHelpers import getConvergenceParams, getPathTime,\
@@ -12,8 +13,10 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     numZones = odMat.shape[0]
     iteration = 0
     gap = float('inf')
+    start_time = time.time()
+    time_spent = 0
 
-    while iteration < 1000 and gap>1e-5:
+    while gap>1e-4 and time_spent<8*3600:
         for i in range(numZones):
             origin = i+1
 
@@ -71,6 +74,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
 
         data.append([iteration, gap])
         iteration += 1
+        time_spent = time.time()-start_time
 
     data = np.array(data)
     return data

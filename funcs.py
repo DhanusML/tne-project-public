@@ -333,7 +333,7 @@ def initMSA(nodes, arcs, odMat, numNodes, numLinks):
     tot1 = 0
     for arc in arcs:
         tot1+=arc.aonFlow
-    print("init", tot1)
+    #print("init", tot1)
 
     return arcs
 
@@ -346,7 +346,9 @@ def msa(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     numZones = odMat.shape[0]
 
     data = []
-    while gap > 1e-4 and k<10000:
+    start_time = time.time()
+    time_spent = 0
+    while gap > 1e-4 and time_spent<8*3600:
         for arc in arcs:
             arc.flow = arc.aonFlow/k + (1-1/k)*arc.flow
             arc.updateArcTime()
@@ -371,14 +373,15 @@ def msa(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
                     thisArc.aonFlow += thisArcDemand
                     '''
 
+        gap = getRelGap(arcs)
         if verbose:
             print("iteration: ", k)
-            gap = getRelGap(arcs)
             #gap = getAEC(arcs, odMat)
-            print(gap)
+            print("gap: ", gap)
             print()
         data.append([k, gap])
         k += 1
+        time_spent = time.time()-start_time
 
     return np.array(data)
 
@@ -391,7 +394,9 @@ def frankWolfe(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     data = []
     numZones = odMat.shape[0]
 
-    while gap > 1e-4 and k<10000:
+    start_time = time.time()
+    time_spent = 0
+    while gap > 1e-4 and time_spent<8*3600:
         if k==1:
             eta = 1
 
@@ -421,14 +426,15 @@ def frankWolfe(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
                     thisArcDemand = odMat[i][j]
                     thisArc.aonFlow += thisArcDemand
                     '''
+        gap = getRelGap(arcs)
         if verbose:
             print("iteration: ", k)
-            gap = getRelGap(arcs)
             #gap = getAEC(arcs, odMat)
             print("gap: ", gap)
             print()
         data.append([k, gap])
         k += 1
+        time_spent = time.time()-start_time
 
     return np.array(data)
 
@@ -440,8 +446,6 @@ def getRelGap(arcs):
         sptt += arc.aonFlow*arc.time
 
     gap = tstt/sptt - 1
-    print("tstt: ", tstt)
-    print("sptt: ", sptt)
 
     return gap
 

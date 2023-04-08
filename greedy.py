@@ -12,8 +12,10 @@ def greedy(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     delta = 0#float('inf')
     numZones = odMat.shape[0]
     iteration = 0
+    start_time = time.time()
+    time_spent = 0
 
-    while iteration < 1000 and gap>1e-5:
+    while gap>1e-4 and time_spent<8*3600:
         for i in range(numZones):
             origin = i+1
 
@@ -79,6 +81,7 @@ def greedy(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
             print()
         data.append([iteration, gap])
         iteration += 1
+        time_spent = time.time()-start_time
 
     data = np.array(data)
     return data
@@ -101,7 +104,7 @@ def greedyLoop(paths, arcs, demand):
 
     sortedIndices = np.argsort(c)
     paths = [paths[i] for i in sortedIndices]
-    s = [s[i] for i in sortedIndices]
+    s = [s[i]+1e-12 for i in sortedIndices]
     c = [c[i] for i in sortedIndices]
 
     currentIndex = 0
