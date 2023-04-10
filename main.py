@@ -3,6 +3,7 @@ from funcs import readData, readFlowData, msa, frankWolfe
 from greedy import greedy
 import matplotlib.pyplot as plt
 import time
+import numpy as np
 
 
 if __name__ == "__main__":
@@ -15,32 +16,40 @@ if __name__ == "__main__":
     numLinks = metaDataDict['numLinks']
     print(metaDataDict)
 
+    '''
     msa_start = time.time()
     data_msa = msa(nodes, arcs, odMat, numNodes, numLinks, True)
+    np.savetxt('data_msa.txt', data_msa)
     msa_end = time.time()
+    print("==============")
+    print("msa: ", msa_end-msa_start)
 
     metaDataDict, arcs, nodes = readData(f'./data/{network}/{network}_net.tntp')
     fw_start = time.time()
     data_fw = frankWolfe(nodes, arcs, odMat, numNodes, numLinks, True)
     fw_end = time.time()
+    print("==============")
+    print("fw: ", fw_end-fw_start)
+
 
 
     metaDataDict, arcs, nodes = readData(f'./data/{network}/{network}_net.tntp')
     gp_start = time.time()
     data_gp = gradProj(nodes, arcs, odMat, numNodes, numLinks, True)
     gp_end = time.time()
+    print("==============")
+    print("gp: ", gp_end-gp_start)
+    '''
 
     #  reset the arcs #
     metaDataDict, arcs, nodes = readData(f'./data/{network}/{network}_net.tntp')
     greedy_start = time.time()
     data_greedy = greedy(nodes, arcs, odMat, numNodes, numLinks, True)
     greedy_end = time.time()
-
-
-    print("msa: ", msa_end-msa_start)
-    print("fw: ", fw_end-fw_start)
-    print("gp: ", gp_end-gp_start)
+    print("==============")
     print("greedy: ", greedy_end-greedy_start)
+
+
 
     plt.plot(data_gp[:,0], data_gp[:,1], label='gradProj')
     plt.plot(data_greedy[:,0], data_greedy[:,1], label='greedy')
@@ -51,5 +60,5 @@ if __name__ == "__main__":
     plt.title(network)
 
     plt.legend()
-    plt.show()
+    #plt.show()
 
