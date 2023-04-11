@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from dataStructures import Arc, PathFlowObj
 from funcs import labelCorrecting
 from pathBasedHelpers import getConvergenceParams, getPathTime,\

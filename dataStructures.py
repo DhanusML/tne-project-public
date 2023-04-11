@@ -27,11 +27,21 @@ class Arc:
     def getArcTimeDer(self):
         const = (self.ffTime*self.b*self.power)/self.capacity
         #factor = (1+self.b*(self.flow/self.capacity))**(self.power-1)
-        factor = (self.flow/self.capacity)**(self.power -1)
+
+        if self.power==0 or self.flow==0:
+            return 0
+
+        else:
+            factor = (self.flow/self.capacity)**(self.power -1)
+
         return const*factor
 
     def getTime(self, flow):
-        newTime = self.ffTime*(1+self.b*((flow/self.capacity)**self.power))
+        if self.flow==0 or self.power==0:
+            newTime = self.ffTime
+            return newTime
+        else:
+            newTime = self.ffTime*(1+self.b*((flow/self.capacity)**self.power))
         return newTime
 
 

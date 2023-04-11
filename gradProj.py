@@ -16,7 +16,7 @@ def gradProj(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
     start_time = time.time()
     time_spent = 0
 
-    while gap>1e-4 and time_spent<8*3600:
+    while gap>1e-4 and time_spent<24*3600:
         for i in range(numZones):
             origin = i+1
 
