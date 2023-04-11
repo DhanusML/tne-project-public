@@ -112,8 +112,8 @@ def greedyLoop(paths, arcs, demand):
     currentS = s[currentIndex]
     currentC = c[currentIndex]
 
-    B = 1/(currentS*demand)
-    C = currentC/(currentS*demand)
+    B = 1/(currentS*demand + 1e-12)
+    C = currentC/(currentS*demand + 1e-12)
     w_bar = (1 + C)/B
 
     newPaths = [paths[currentIndex]]
@@ -136,9 +136,11 @@ def greedyLoop(paths, arcs, demand):
 
     for i, pathObj in enumerate(newPaths):
         newFlow = (w_bar - c[i])/s[i]
+        if newFlow == 0:
+            raise(ValueError("newFlow cannot be zero"))
         if newFlow < 0:
-            #raise(ValueError("newFlow should be non-negative"))
-            pass
+            raise(ValueError("newFlow should be non-negative"))
+            #pass
         pathObj.newFlow = newFlow
 
     for pathObj in paths:

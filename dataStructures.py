@@ -15,7 +15,7 @@ class Arc:
         self.flow = 0
         self.aonFlow = 0
         self.time = self.ffTime
-        self.der = 1e-13
+        self.der = 1e-12
 
     def updateArcTime(self):
         newTime = self.getTime(self.flow)
