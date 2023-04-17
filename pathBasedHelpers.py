@@ -1,4 +1,5 @@
-from funcs import labelCorrecting
+from funcs import labelCorrecting, labelSetting
+
 
 def updateFlows(oldPath, newPath, change, arcs):
     oldPath.flow -= change
@@ -32,7 +33,7 @@ def getSPTT(nodes, arcs, odMat, numNodes, numLinks):
     numZones = odMat.shape[0]
     for i in range(numZones):
         origin = i+1
-        _, pathArcDict = labelCorrecting(
+        _, pathArcDict = labelSetting(
             origin, nodes, arcs, numNodes, numLinks
         )
         for j in range(numZones):
