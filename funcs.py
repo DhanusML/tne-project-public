@@ -210,7 +210,7 @@ def labelCorrecting(origin, nodes, arcs, numNodes, numLinks):
     return pathDict, pathArcDict
 
 
-def labelSetting(origin, nodes, arcs, numNodes, numLinks):
+def labelSetting(origin, nodes, arcs, numNodes, numLinks, firstThruNode=1):
     #  Dijkstra's
 
     #  initialization
@@ -225,6 +225,8 @@ def labelSetting(origin, nodes, arcs, numNodes, numLinks):
     while(len(unVisited)):
         i = min(unVisited, key= lambda x: nodes[x-1].label)
         unVisited.remove(i)
+        if i<firstThruNode:
+            continue
         for arc in nodes[i-1].adjArcs:
             thisArc = arcs[arc-1]
             j = thisArc.tailNode
