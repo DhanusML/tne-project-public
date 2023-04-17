@@ -251,7 +251,7 @@ def initMSA(nodes, arcs, odMat, numNodes, numLinks):
     numZones = odMat.shape[0]
     for i in range(numZones):
         origin = i+1
-        pathDict, pathArcDict = labelCorrecting(
+        pathDict, pathArcDict = labelSetting(
             origin, nodes, arcs,
             numNodes, numLinks
         )
@@ -345,7 +345,7 @@ def frankWolfe(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
 
         for i in range(numZones):
             origin = i+1
-            pathDict, pathArcDict = labelCorrecting(
+            pathDict, pathArcDict = labelSetting(
                 origin, nodes, arcs,
                 numNodes, numLinks
             )
@@ -427,168 +427,6 @@ def getPathTime(path, arcs):
         time += arcs[arcNum-1].time
 
     return time
-
-
-def gradProj(nodes, arcs, odMat, numNodes, numLinks):
-    from time import sleep
-    numZones = odMat.shape[0]
-
-    #  Initialization
-    p_hat = {}
-    p_hat_set = {}
-    for i in range(numZones):
-        for j in range(numZones):
-            if i==j:
-                continue
-
-            p_hat[(i+1,j+1)] = []
-            p_hat_set[(i+1, j+1)] = []
-
-    gap = float('inf')
-    sptt = 0
-    tstt = float('inf')
-    iteration = -1
-
-    while iteration < 200000:
-        # sleep(1)
-        sptt = 0
-        for i in range(numZones):
-            origin = i+1
-            pathDict, pathArcDict = labelCorrecting(
-                origin, nodes, arcs,
-                numNodes, numLinks
-            )
-
-            for j in range(numZones):
-                if j==i:
-                    continue
-
-                destination = j+1
-                p_star = pathArcDict[destination]
-
-                tau_star = getPathTime(p_star, arcs)
-                sptt += odMat[i][j]*tau_star
-
-                if p_star not in p_hat_set[(origin, destination)]:
-                    p_hat_set[(origin, destination)].append(p_star)
-                    p_hat[(origin, destination)].append(PathFlowObj(p_star, 0))
-
-                else:
-                    index_s = p_hat_set[(origin, destination)].index(p_star)
-                    p_hat_set[(origin, destination)][index_s],\
-                        p_hat_set[(origin, destination)][-1] = \
-                        p_hat_set[(origin, destination)][-1],\
-                        p_hat_set[(origin, destination)][index_s]
-
-                    p_hat[(origin, destination)][index_s],\
-                        p_hat[(origin, destination)][-1] = \
-                        p_hat[(origin, destination)][-1],\
-                        p_hat[(origin, destination)][index_s]
-
-                if len(p_hat[(origin, destination)])==1:
-                    p_hat[(origin, destination)][0].flow = odMat[i][j]
-
-
-                else:
-                    for pathObj in p_hat[(origin, destination)][:-1]:
-                        link_symm_diff = set(pathObj.path).symmetric_difference(set(p_star))
-                        denominator = 0
-                        for arcNum in link_symm_diff:
-                            denominator += arcs[arcNum-1].der
-
-                        tau = getPathTime(pathObj.path, arcs)
-                        #print("tau - tau_star", tau-tau_star)
-                        #print("denominator ", denominator)
-                        #denominator = 1/(iteration+2)
-                        denominator*=(1/(iteration+2))
-                        denominator = 1
-
-                        flowShift = min(pathObj.flow,
-                                        (tau-tau_star)/denominator)
-                        #print("flowShift", flowShift)
-                        if flowShift < 0:
-                            raise(ValueError("flowShift must be non-negative"))
-
-                        pathObj.flow -= flowShift
-                        p_hat[(origin, destination)][-1].flow += flowShift
-                        #tstt += tau*pathObj.flow
-
-                        for arcNum in pathObj.path:
-                            arcs[arcNum-1].flow += pathObj.flow
-
-                #tstt += p_hat[(origin, destination)][-1].flow*tau_star
-
-                for pathObj in p_hat[(origin, destination)]:
-                    for arcNum in pathObj.path:
-                        arcs[arcNum-1].flow += pathObj.flow
-
-
-                p_hat_set[(origin, destination)] = [x.path for x in
-                                                    p_hat[(origin, destination)]
-                                                    if x.flow != 0]
-
-                p_hat[(origin, destination)] = [x for x in
-                                                p_hat[(origin, destination)]
-                                                if x.flow != 0]
-            for arc in arcs:
-                arc.updateArcTime()
-                arc.updateArcTimeDer()
-
-
-        for i in range(numZones):
-            origin = i+1
-            for j in range(numZones):
-                if i==j:
-                    continue
-                destination = j+1
-                print(origin, destination, end=' - ')
-                for pathObj in p_hat[(origin, destination)]:
-                    thisTime = round(getPathTime(pathObj.path, arcs),2)
-                    print(pathObj.path,'--', [round(arcs[num-1].flow,2) for num in pathObj.path],
-                          round(pathObj.flow,2), thisTime, end=';')
-                print()
-
-            '''
-            for arc in arcs:
-                arc.updateArcTime()
-                arc.updateArcTimeDer()
-            '''
-
-
-
-
-        tot_flow = 0
-        for i in range(numZones):
-            origin = i+1
-            for j in range(numZones):
-                if j==i:
-                    continue
-                destination = j+1
-                for pathObj in p_hat[(origin, destination)]:
-                    tot_flow += pathObj.flow
-
-        #gap = getRelGap(arcs)
-        print("tstt: ", tstt)
-        print("sptt: ", sptt)
-        gap = tstt/sptt - 1
-
-        tstt = 0
-        for arc in arcs:
-            tstt+=(arc.flow*arc.time)
-
-
-        print("total flow", tot_flow)
-
-        iteration += 1
-        for arc in arcs:
-            arc.aonFlow = 0
-            arc.flow = 0
-
-        print("iteration ", iteration)
-        print("gap ", gap)
-        print()
-
-
 
 
 if __name__ == "__main__":

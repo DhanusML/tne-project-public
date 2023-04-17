@@ -1,7 +1,7 @@
 import numpy as np
 import time
 from dataStructures import Arc, PathFlowObj
-from funcs import labelCorrecting
+from funcs import labelCorrecting, labelSetting
 from pathBasedHelpers import getConvergenceParams, getPathTime,\
     printPathFlow
 
@@ -20,7 +20,7 @@ def greedy(nodes, arcs, odMat, numNodes, numLinks, verbose=False):
         for i in range(numZones):
             origin = i+1
 
-            _, pathArcDict = labelCorrecting(origin, nodes, arcs,
+            _, pathArcDict = labelSetting(origin, nodes, arcs,
                                              numNodes,numLinks)
 
             for j in range(numZones):
@@ -169,7 +169,7 @@ def initializeGreedy(nodes, arcs, odMat, numNodes, numLinks):
     for i in range(numZones):
         origin = i+1
 
-        _, pathArcDict = labelCorrecting(
+        _, pathArcDict = labelSetting(
             origin, nodes, arcs,
             numNodes, numLinks
         )
